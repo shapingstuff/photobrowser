@@ -1,0 +1,38 @@
+/* ✅ Kiosk Fullscreen Display */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .frame-container {
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  
+  /* ✅ Fullscreen Image with Transition */
+  .fullscreen-image {
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+    background: black;
+    position: absolute;
+  }
+  
+  /* ✅ Loading Text */
+  .waiting-text {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    position: absolute;
+  }
+  
