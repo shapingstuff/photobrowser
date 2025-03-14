@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
+import "./RoundDisplay.css"; // Import the CSS file
 
-const WEBSOCKET_URL = "ws://192.168.68.56:8080"; // WebSocket for sending data
+const WEBSOCKET_URL = "ws://192.168.68.56:8080"; // WebSocket for sending data on the dashboard
 const PHOTOPRISM_URL = "http://192.168.68.81:2342"; // PhotoPrism API
 
 const Dashboard = () => {
   const [photos, setPhotos] = useState([]);
   const [ws, setWs] = useState(null);
+  const [currentText, setCurrentText] = useState("Welcome! Tap to Load Photos");
 
   useEffect(() => {
     const socket = new WebSocket(WEBSOCKET_URL);
@@ -28,8 +30,10 @@ const Dashboard = () => {
       }));
 
       setPhotos(images);
+      setCurrentText("Select an Image Below");
     } catch (error) {
       console.error("❌ Error fetching images:", error);
+      setCurrentText("Error Loading Photos");
     }
   };
 
@@ -39,25 +43,32 @@ const Dashboard = () => {
       const jsonMessage = JSON.stringify({ type: "image", url: imageUrl });
       ws.send(jsonMessage);
       console.log(`📩 Sent image: ${imageUrl}`);
+      setCurrentText("Image Sent!");
     }
   };
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <button onClick={fetchPhotos}>Load Photos</button>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "20px" }}>
-        {photos.map(photo => (
-          <img
-            key={photo.id}
-            src={photo.url}
-            alt="Photo"
-            width="150"
-            style={{ cursor: "pointer", borderRadius: "8px" }}
-            onClick={() => sendToFrame(photo.url)}
-          />
-        ))}
-      </div>
+    <div className="round-display">
+      <div className="round-text">{currentText}</div>
+      {photos.length === 0 ? (
+        <button onClick={fetchPhotos} style={{ position: "absolute", bottom: "20px", padding: "10px 20px" }}>
+          Load Photos
+        </button>
+      ) : (
+        <div style={{ position: "absolute", bottom: "20px", display: "flex", gap: "10px", overflowX: "auto" }}>
+          {photos.map(photo => (
+            <img
+              key={photo.id}
+              src={photo.url}
+              alt="Photo"
+              width="80"
+              height="80"
+              style={{ borderRadius: "50%", cursor: "pointer", objectFit: "cover" }}
+              onClick={() => sendToFrame(photo.url)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
