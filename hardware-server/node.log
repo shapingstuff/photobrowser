@@ -1,0 +1,137 @@
+🚀 WebSocket server running on ws://0.0.0.0:8080
+🚀 WebSocket server running on ws://0.0.0.0:8080
+🚀 WebSocket server running on ws://0.0.0.0:8080
+🚀 WebSocket server running on ws://0.0.0.0:8080
+🚀 WebSocket server running on ws://0.0.0.0:8080
+🚀 WebSocket server running on ws://0.0.0.0:8080
+🚀 WebSocket server running on ws://0.0.0.0:8080
+🚀 WebSocket server running on ws://0.0.0.0:8080
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+📩 Received JSON: {
+  type: 'image',
+  url: 'http://192.168.68.81:2342/api/v1/t/cbbca1add2862fc256f18ae457138cda718f75b1/public/fit_1920'
+}
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+📩 Received JSON: {
+  type: 'image',
+  url: 'http://192.168.68.81:2342/api/v1/t/a01cf15ca1b8365eecf3ed66d2ee345cf92fcf28/public/fit_1920'
+}
+📩 Received JSON: {
+  type: 'image',
+  url: 'http://192.168.68.81:2342/api/v1/t/cbbca1add2862fc256f18ae457138cda718f75b1/public/fit_1920'
+}
+📩 Received JSON: {
+  type: 'image',
+  url: 'http://192.168.68.81:2342/api/v1/t/07cd1c5c871ed693bd31093575a519bf3e03a510/public/fit_1920'
+}
+❌ Client disconnected
+❌ Client disconnected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: {
+  type: 'image',
+  url: 'http://192.168.68.81:2342/api/v1/t/cbbca1add2862fc256f18ae457138cda718f75b1/public/fit_1920'
+}
+✅ New client connected
+❌ Client disconnected
+✅ New client connected
+📩 Received JSON: {
+  type: 'image',
+  url: 'http://192.168.68.81:2342/api/v1/t/a01cf15ca1b8365eecf3ed66d2ee345cf92fcf28/public/fit_1920'
+}
+❌ Client disconnected
+✅ New client connected
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: 1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+📩 Received JSON: { type: 'encoder', value: -1 }
+❌ Client disconnected

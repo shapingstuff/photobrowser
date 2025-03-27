@@ -12,11 +12,28 @@ const Dashboard = () => {
   useEffect(() => {
     const socket = new WebSocket(WEBSOCKET_URL);
     setWs(socket);
-
+  
     socket.onopen = () => console.log("✅ Connected to WebSocket server");
-
+  
+    socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("📩 Received from encoder:", data);
+  
+        if (data.type === "encoder") {
+          setCurrentText(`Encoder moved: ${data.value}`);
+        }
+  
+        if (data.type === "button") {
+          setCurrentText("🔘 Button Pressed");
+        }
+      } catch (error) {
+        console.error("❌ Failed to parse WebSocket message:", error);
+      }
+    };
+  
     return () => socket.close();
-  }, []);
+  }, []);  
 
   // ✅ Fetch photos from PhotoPrism
   const fetchPhotos = async () => {
