@@ -44,27 +44,40 @@ const Dashboard1 = () => {
 
   return (
     <div className="round-display">
-  <div
-    style={{
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -100%)",
-      transformOrigin: "bottom center",
-    }}
-  >
-    <motion.div
-      animate={{ rotate: angle }}
-      transition={{ type: "spring", stiffness: 140, damping: 15 }}
-      style={{
-        width: "4px",
-        height: "35vh", // try using vh for more consistent scale
-        backgroundColor: "white",
-        transformOrigin: "bottom center",
-      }}
-    />
-  </div>
-</div>
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -100%)",
+          transformOrigin: "bottom center",
+        }}
+      >
+        <motion.div
+          animate={{ rotate: angle }}
+          transition={{ type: "spring", stiffness: 140, damping: 15 }}
+          style={{
+            width: "4px",
+            height: "35vh", // try using vh for more consistent scale
+            backgroundColor: "white",
+            transformOrigin: "bottom center",
+          }}
+        />
+      </div>
+      <div
+  style={{
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    width: "20px",
+    height: "20px",
+    backgroundColor: "yellow",
+    borderRadius: "50%",
+    transform: "translate(-50%, -50%)",
+    zIndex: 10, // ensure it's on top if needed
+  }}
+/>
+    </div>
   );
 };
 
