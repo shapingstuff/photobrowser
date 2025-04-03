@@ -9,7 +9,7 @@ import Dashboard5 from "./dashboards/Dashboard5/Dashboard5";
 import Dashboard6 from "./dashboards/Dashboard6/Dashboard6";
 import Dashboard7 from "./dashboards/Dashboard7/Dashboard7";
 import Dashboard8 from "./dashboards/Dashboard8/Dashboard8";
-
+import Dashboard9 from "./dashboards/Dashboard9/Dashboard9";
 
 import Frame1 from "./frames/Frame1/Frame1";
 import Frame2 from "./frames/Frame2/Frame2";
@@ -26,6 +26,8 @@ const Home = () => (
       <li><Link to="/dashboard-6">Dashboard 6</Link></li>
       <li><Link to="/dashboard-7">Dashboard 7</Link></li>
       <li><Link to="/dashboard-8">Dashboard 8</Link></li>
+      <li><Link to="/dashboard-9">Dashboard 9</Link></li>
+
 
 
 
@@ -54,6 +56,7 @@ const App = () => (
       <Route path="/dashboard-6" element={<Dashboard6 />} />
       <Route path="/dashboard-7" element={<Dashboard7 />} />
       <Route path="/dashboard-8" element={<Dashboard8 />} />
+      <Route path="/dashboard-9" element={<Dashboard9 />} />
 
       {/* Frames */}
       <Route path="/frame-1" element={<Frame1 />} />
