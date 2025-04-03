@@ -9,17 +9,20 @@ const Dashboard = () => {
   const wsRef = useRef(null);
   const [angle, setAngle] = useState(0);
   const [currentPhoto, setCurrentPhoto] = useState(null);
+  const [currentDateLabel, setCurrentDateLabel] = useState("");
   const lastTurnTime = useRef(Date.now());
   const recentTurns = useRef([]);
 
+  // 📡 WebSocket connection
   useEffect(() => {
     const socket = new WebSocket(WEBSOCKET_URL);
-    wsRef.current = socket; // ✅ Assign ref so sendToFrame has access
-    console.log("✅ WebSocket created");
+    wsRef.current = socket;
 
-    socket.onopen = () => {
-      console.log("✅ WebSocket connected");
-    };
+    socket.onopen = () => console.log("✅ WebSocket connected");
+
+    socket.onclose = () => console.log("❌ WebSocket disconnected");
+
+    socket.onerror = (err) => console.error("❌ WebSocket error:", err);
 
     socket.onmessage = async (event) => {
       try {
@@ -41,82 +44,83 @@ const Dashboard = () => {
           else if (avg < 200) step = 10;
           else if (avg < 350) step = 5;
 
-          setAngle(prev => {
+          setAngle((prev) => {
             const newAngle = prev + data.value * step;
-            const date = angleToDate(newAngle);
-            fetchPhotosByDate(date);
+            const { after, before, display } = angleToMonthYear(newAngle);
+            setCurrentDateLabel(display);
+            fetchPhotosByMonth(after, before);
             return newAngle;
           });
         }
       } catch (err) {
-        console.error("❌ Invalid WebSocket message", err);
+        console.error("⚠️ Invalid WebSocket message:", err);
       }
     };
 
     return () => socket.close();
   }, []);
 
-  const angleToDate = (angle) => {
-    const baseYear = 2015;
-    const maxYears = 10;
-    const clampedAngle = Math.max(0, Math.min(angle, 360));
-    const yearOffset = Math.floor((clampedAngle / 360) * maxYears);
-    const year = baseYear + yearOffset;
-    return `${year}-01-01`;
+  // 🔁 Convert angle to month/year range
+  const angleToMonthYear = (angle) => {
+    const baseYear = 2019;
+    const maxMonths = ((new Date().getFullYear() - baseYear + 1) * 12);
+    const totalMonths = Math.floor((Math.max(0, angle) / 360) * maxMonths);
+
+    const year = baseYear + Math.floor(totalMonths / 12);
+    const month = (totalMonths % 12) + 1;
+    const paddedMonth = month.toString().padStart(2, "0");
+
+    const after = `${year}-${paddedMonth}-01`;
+    const before = month === 12 ? `${year + 1}-01-01` : `${year}-${(month + 1).toString().padStart(2, "0")}-01`;
+
+    const display = `${new Date(year, month - 1).toLocaleString("default", {
+      month: "long",
+    })} ${year}`;
+
+    return { after, before, display };
   };
 
-  const fetchPhotosByDate = async (date) => {
+  // 📷 Fetch PhotoPrism photos by month range
+  const fetchPhotosByMonth = async (after, before) => {
     try {
-      console.log("🔍 Fetching photo from date:", date);
-      const response = await fetch(`${PHOTOPRISM_URL}/api/v1/photos?after=${date}&count=1`);
+      console.log(`🔍 Fetching from: ${after} → ${before}`);
+      const response = await fetch(`${PHOTOPRISM_URL}/api/v1/photos?after=${after}&before=${before}&count=1`);
       const data = await response.json();
       if (data.length > 0) {
         const imageUrl = `${PHOTOPRISM_URL}/api/v1/t/${data[0].Hash}/public/fit_1920`;
-        console.log("🖼️ Photo URL:", imageUrl);
         setCurrentPhoto(imageUrl);
         sendToFrame(imageUrl);
+      } else {
+        console.log("📭 No photos found for this range");
       }
     } catch (error) {
-      console.error("❌ Error fetching image by date:", error);
+      console.error("❌ Error fetching photos:", error);
     }
   };
 
+  // 📤 Send photo to frame via WebSocket
   const sendToFrame = (url, retry = 0) => {
     const ws = wsRef.current;
 
     if (!ws) {
-      console.warn("⚠️ WebSocket instance is null (retry", retry, ")");
-      if (retry < 5) {
-        setTimeout(() => sendToFrame(url, retry + 1), 200);
-      }
+      console.warn("⚠️ WebSocket is null");
       return;
     }
 
-    console.log("🔍 WebSocket readyState:", ws.readyState);
-
-    switch (ws.readyState) {
-      case WebSocket.OPEN:
-        try {
-          const message = JSON.stringify({ type: "image", url });
-          ws.send(message);
-          console.log("📩 Sent image to frame:", url);
-        } catch (err) {
-          console.error("❌ Error while sending WebSocket message:", err);
-        }
-        break;
-      case WebSocket.CONNECTING:
-        console.warn("🕒 WebSocket is CONNECTING. Retrying...");
-        if (retry < 5) {
-          setTimeout(() => sendToFrame(url, retry + 1), 200);
-        }
-        break;
-      default:
-        console.warn("⚠️ WebSocket not ready. State:", ws.readyState);
+    if (ws.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({ type: "image", url });
+      ws.send(message);
+      console.log("📩 Sent image to frame:", url);
+    } else if (ws.readyState === WebSocket.CONNECTING && retry < 5) {
+      setTimeout(() => sendToFrame(url, retry + 1), 200);
+    } else {
+      console.warn("⚠️ WebSocket not ready. State:", ws.readyState);
     }
   };
 
   return (
     <div className="round-display">
+      {/* Rotating Line */}
       <div
         style={{
           position: "absolute",
@@ -138,6 +142,7 @@ const Dashboard = () => {
         />
       </div>
 
+      {/* Center Dot */}
       <div
         style={{
           position: "absolute",
@@ -152,6 +157,7 @@ const Dashboard = () => {
         }}
       />
 
+      {/* Footer Text */}
       <div style={{
         position: "absolute",
         bottom: "20px",
@@ -160,7 +166,9 @@ const Dashboard = () => {
         color: "white",
         fontSize: "18px"
       }}>
-        {currentPhoto ? `📅 Showing photo from approx ${angleToDate(angle)}` : "🌀 Turn the dial to explore photos by year"}
+        {currentPhoto
+          ? `📅 Showing photo from ${currentDateLabel}`
+          : "🌀 Turn the dial to explore by month"}
       </div>
     </div>
   );
