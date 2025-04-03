@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./RoundDisplay.css"; // Import the CSS file
+import "./Dashboard5.css"; // Import the CSS file
 
 const WEBSOCKET_URL = "ws://192.168.68.56:8080"; // WebSocket for sending data on the dashboard
 const PHOTOPRISM_URL = "http://192.168.68.81:2342"; // PhotoPrism API
@@ -57,6 +57,7 @@ const Dashboard = () => {
   // ✅ Send selected image to WebSocket (for Frame.js)
   const sendToFrame = (imageUrl) => {
     if (ws && ws.readyState === WebSocket.OPEN) {
+      console.log("Dashboard5 is sending:", JSON.stringify({ type: "image", imageUrl }));
       const jsonMessage = JSON.stringify({ type: "image", url: imageUrl });
       ws.send(jsonMessage);
       console.log(`📩 Sent image: ${imageUrl}`);

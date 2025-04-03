@@ -15,14 +15,14 @@ const Frame = () => {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.type === "image") {
-          console.log(`📩 Received image: ${data.url}`);
+        if (data.type === "image" && data.url) {
+          console.log("🖼️ Displaying image:", data.url);
           setImageUrl(data.url);
         } else {
-          console.warn("❌ Unsupported message type:", data);
+          console.warn("⚠️ Unexpected data structure:", data);
         }
-      } catch (error) {
-        console.error("❌ Error parsing JSON:", error);
+      } catch (err) {
+        console.error("❌ Failed to parse JSON:", event.data);
       }
     };
 
