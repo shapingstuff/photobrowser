@@ -1,0 +1,40 @@
+.round-display.timeline {
+  width: 100vw;
+  height: 100vw;
+  max-width: 100vh;
+  max-height: 100vh;
+  border-radius: 50%;
+  background-color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.timeline-track {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.timeline-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.marker-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: yellow;
+  box-shadow: 0 0 4px white;
+}
+
+.marker-line {
+  width: 40px;
+  height: 2px;
+  background-color: white;
+}

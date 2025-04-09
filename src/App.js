@@ -10,6 +10,10 @@ import Dashboard6 from "./dashboards/Dashboard6/Dashboard6";
 import Dashboard7 from "./dashboards/Dashboard7/Dashboard7";
 import Dashboard8 from "./dashboards/Dashboard8/Dashboard8";
 import Dashboard9 from "./dashboards/Dashboard9/Dashboard9";
+import Dashboard10 from "./dashboards/Dashboard10/Dashboard10";
+import Dashboard11 from "./dashboards/Dashboard11/Dashboard11";
+import Dashboard12 from "./dashboards/Dashboard12/Dashboard12";
+
 
 import Frame1 from "./frames/Frame1/Frame1";
 import Frame2 from "./frames/Frame2/Frame2";
@@ -27,6 +31,13 @@ const Home = () => (
       <li><Link to="/dashboard-7">Dashboard 7</Link></li>
       <li><Link to="/dashboard-8">Dashboard 8</Link></li>
       <li><Link to="/dashboard-9">Dashboard 9</Link></li>
+      <li><Link to="/dashboard-10">Dashboard 10</Link></li>
+      <li><Link to="/dashboard-11">Dashboard 11</Link></li>
+      <li><Link to="/dashboard-12">Dashboard 12</Link></li>
+
+
+
+
 
 
 
@@ -57,6 +68,11 @@ const App = () => (
       <Route path="/dashboard-7" element={<Dashboard7 />} />
       <Route path="/dashboard-8" element={<Dashboard8 />} />
       <Route path="/dashboard-9" element={<Dashboard9 />} />
+      <Route path="/dashboard-10" element={<Dashboard10 />} />
+      <Route path="/dashboard-11" element={<Dashboard11 />} />
+      <Route path="/dashboard-12" element={<Dashboard12 />} />
+
+
 
       {/* Frames */}
       <Route path="/frame-1" element={<Frame1 />} />

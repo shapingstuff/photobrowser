@@ -1,0 +1,37 @@
+.round-display.timeline {
+  position: absolute;
+  width: 100vw;
+  height: 100vw;
+  max-width: 100vh;
+  max-height: 100vh;
+  border-radius: 50%;
+  background-color: rgb(255, 255, 255);
+  overflow: hidden;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* tape starts at bottom */
+}
+
+.tape-holder {
+  position: relative;
+  width: 60px;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end; /* anchor SVG to bottom */
+}
+
+/* ❗️This is key: place top of SVG at the bottom of the screen */
+.tape-wrapper {
+  position: absolute;
+  bottom: 0; /* 👈 top of SVG aligns with bottom of screen */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
