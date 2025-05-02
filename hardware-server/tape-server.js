@@ -1,13 +1,10 @@
-// tape-server.js
-const WebSocket = require("ws");
 const mqtt = require("mqtt");
+const WebSocket = require("ws");
 const fetch = require("node-fetch");
 
 const PHOTOPRISM_API = "http://192.168.68.81:2342";
 const mqttClient = mqtt.connect("mqtt://localhost:1883");
-
-const wss = new WebSocket.Server({ port: 8080, host: "0.0.0.0" });
-console.log("🚀 WebSocket server running on ws://0.0.0.0:8080");
+const ws = new WebSocket("ws://localhost:8080");
 
 let timeline = [];
 let lastSentHash = null;
@@ -17,29 +14,21 @@ function parseTapeAlbums(albums) {
     .filter(a => a.Description && a.Description.startsWith("TAPE|"))
     .map(a => {
       const parts = a.Description.split("|");
-      if (parts.length < 6) return null;
-      const [_, tapeId, type, title, color, index] = parts;
+      if (parts.length < 7) return null;
+      const [_, tapeId, type, title, color, start, end] = parts;
       return {
         tapeId,
         type,
         title,
         color,
-        index: parseInt(index),
+        startCM: parseInt(start),
+        endCM: parseInt(end),
         uid: a.UID,
         photos: [],
       };
     })
     .filter(Boolean)
-    .sort((a, b) => a.index - b.index);
-}
-
-function getCurrentAlbum(cm) {
-  for (let album of timeline) {
-    const start = album.index;
-    const end = start + album.photos.length - 1;
-    if (cm >= start && cm <= end) return { album, photoIndex: cm - start };
-  }
-  return null;
+    .sort((a, b) => a.startCM - b.startCM);
 }
 
 async function fetchTapeTimeline() {
@@ -59,10 +48,16 @@ async function fetchTapeTimeline() {
       const data = await res.json();
       if (!Array.isArray(data)) {
         console.warn(`⚠️ Skipping album ${album.title}: photos response not an array`);
-        console.warn("🔍 Response:", data);
         continue;
       }
-      album.photos = data.map(p => ({ hash: p.Hash }));
+
+      album.photos = data
+        .map(p => ({
+          hash: p.Hash,
+          date: new Date(p.TakenAt || p.TakenAtLocal || null)
+        }))
+        .filter(p => !isNaN(p.date.getTime()))
+        .sort((a, b) => a.date - b.date);
     }
 
     console.log("📚 Timeline loaded with", timeline.length, "albums");
@@ -71,28 +66,16 @@ async function fetchTapeTimeline() {
   }
 }
 
-wss.on("connection", (ws) => {
-  console.log("✅ New client connected");
-
-  ws.on("message", (message) => {
-    try {
-      const parsed = JSON.parse(message);
-      console.log("📩 Received JSON:", parsed);
-
-      wss.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify(parsed));
-        }
-      });
-    } catch (err) {
-      console.error("❌ Invalid JSON received:", err);
+function getCurrentAlbum(mm) {
+  for (let album of timeline) {
+    const startMM = album.startCM * 10;
+    const endMM = album.endCM * 10;
+    if (mm >= startMM && mm <= endMM) {
+      return { album, startMM, endMM };
     }
-  });
-
-  ws.on("close", () => {
-    console.log("❌ Client disconnected");
-  });
-});
+  }
+  return null;
+}
 
 mqttClient.on("connect", () => {
   console.log("📡 MQTT connected");
@@ -101,47 +84,48 @@ mqttClient.on("connect", () => {
 });
 
 mqttClient.on("message", async (topic, message) => {
-  if (topic === "tape/position") {
-    const cm = parseInt(message.toString());
-    console.log(`📏 Tape position: ${cm} cm`);
+  if (topic !== "tape/position") return;
 
-    const match = getCurrentAlbum(cm);
-    if (!match) {
-      console.log("⚠️ No album found at this position");
-      return;
-    }
-
-    const { album, photoIndex } = match;
-    const photo = album.photos[photoIndex];
-    if (!photo) {
-      console.log("⚠️ No photo at this cm position in album");
-      return;
-    }
-
-    if (photo.hash === lastSentHash) {
-      return; // Skip sending duplicate image
-    }
-    lastSentHash = photo.hash;
-
-    const imageUrl = `${PHOTOPRISM_API}/api/v1/t/${photo.hash}/public/fit_1920`;
-
-    const payload = {
-      type: "image",
-      url: imageUrl,
-      albumTitle: album.title,
-      color: album.color,
-      cm,
-    };
-
-    wss.clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(payload));
-      }
-    });
-
-    console.log("🖼️ Sent image from album:", album.title, "→", imageUrl);
-    mqttClient.publish("tape/led", JSON.stringify(colorToRGB(album.color)));
+  const mm = parseInt(message.toString());
+  const match = getCurrentAlbum(mm);
+  if (!match) {
+    console.log("⚠️ No album at this mm");
+    return;
   }
+
+  const { album, startMM, endMM } = match;
+  const range = endMM - startMM;
+  const relMM = mm - startMM;
+  const photoCount = album.photos.length;
+
+  if (photoCount === 0) {
+    console.log("⚠️ No photos in album:", album.title);
+    return;
+  }
+
+  const binSize = range / photoCount;
+  const index = Math.min(photoCount - 1, Math.floor(relMM / binSize));
+  const photo = album.photos[index];
+
+  if (!photo || photo.hash === lastSentHash) return;
+  lastSentHash = photo.hash;
+
+  const imageUrl = `${PHOTOPRISM_API}/api/v1/t/${photo.hash}/public/fit_1920`;
+  const payload = {
+    type: "image",
+    url: imageUrl,
+    albumTitle: album.title,
+    color: album.color,
+    mm,
+    cm: Math.floor(mm / 10)
+  };
+
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(payload));
+  }
+
+  console.log("🖼️ Sent image:", album.title, "→", imageUrl);
+  mqttClient.publish("tape/led", JSON.stringify(colorToRGB(album.color)));
 });
 
 function colorToRGB(colorName) {
