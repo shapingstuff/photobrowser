@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // ✅ Import Motion
 import "./Frame1.css"; // ✅ Import CSS
 
-const WEBSOCKET_URL = "ws://192.168.68.56:8080"; // WebSocket server
+const WEBSOCKET_URL = "ws://192.168.68.90:8080"; // WebSocket server
 
 const Frame = () => {
   const [imageUrl, setImageUrl] = useState("");
@@ -31,29 +30,16 @@ const Frame = () => {
 
   return (
     <div className="frame-container">
-      <AnimatePresence>
-        {imageUrl ? (
-          <motion.img
-            key={imageUrl} // ✅ Ensure each image transition is unique
-            src={imageUrl}
-            alt="Slideshow"
-            className="fullscreen-image"
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            transition={{ duration: 1 }} // ✅ Smooth fade transition
-          />
-        ) : (
-          <motion.p
-            className="waiting-text"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            Waiting for an image...
-          </motion.p>
-        )}
-      </AnimatePresence>
+      {imageUrl ? (
+        <img
+          key={imageUrl}
+          src={imageUrl}
+          alt="Slideshow"
+          className="fullscreen-image"
+        />
+      ) : (
+        <p className="waiting-text">Waiting for an image...</p>
+      )}
     </div>
   );
 };
