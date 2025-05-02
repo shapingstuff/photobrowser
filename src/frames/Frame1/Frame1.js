@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import "./Frame1.css"; // ✅ Import CSS
+import React, { useEffect, useState, useRef } from "react";
+import "./Frame1.css";
 
-const WEBSOCKET_URL = "ws://192.168.68.90:8080"; // WebSocket server
+const WEBSOCKET_URL = "ws://192.168.68.90:8080";
 
 const Frame = () => {
   const [imageUrl, setImageUrl] = useState("");
+  const [albumTitle, setAlbumTitle] = useState("");
+  const lastUrlRef = useRef(""); // 🔁 Use a ref to track last URL
 
   useEffect(() => {
     const socket = new WebSocket(WEBSOCKET_URL);
@@ -15,8 +17,14 @@ const Frame = () => {
       try {
         const data = JSON.parse(event.data);
         if (data.type === "image" && data.url) {
-          console.log("🖼️ Displaying image:", data.url);
-          setImageUrl(data.url);
+          if (data.url !== lastUrlRef.current) {
+            console.log("🖼️ Displaying new image:", data.url);
+            lastUrlRef.current = data.url;
+            setImageUrl(data.url);
+          } else {
+            console.log("🔁 Duplicate image, not updating.");
+          }
+          setAlbumTitle(data.albumTitle || "");
         } else {
           console.warn("⚠️ Unexpected data structure:", data);
         }
@@ -31,12 +39,14 @@ const Frame = () => {
   return (
     <div className="frame-container">
       {imageUrl ? (
-        <img
-          key={imageUrl}
-          src={imageUrl}
-          alt="Slideshow"
-          className="fullscreen-image"
-        />
+        <>
+          <img
+            src={imageUrl}
+            alt="Slideshow"
+            className="fullscreen-image"
+          />
+          <div className="album-title-overlay">{albumTitle}</div>
+        </>
       ) : (
         <p className="waiting-text">Waiting for an image...</p>
       )}

@@ -1,3 +1,23 @@
+## Tape Album Format (2nd May 2025)
+
+Albums in PhotoPrism must follow this description format:
+
+TAPE|<TapeID>|<Type>|<Title>|<Color>|<StartCM>|<EndCM>
+
+| Field       | Description                               |
+|-------------|-------------------------------------------|
+| TAPE        | Static prefix indicating tape-mapped album |
+| TapeID      | ID of the tape (e.g. `MainTape`)           |
+| Type        | Label/category (e.g. `Milestone`)          |
+| Title       | Album title (displayed on frame)           |
+| Color       | Colour name for LED feedback               |
+| StartCM     | Start position on tape in centimetres      |
+| EndCM       | End position on tape in centimetres        |
+
+### Example
+
+TAPE|AdoptionTape|Milestone|MovingInDay|cyan|30|35
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
